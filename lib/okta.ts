@@ -6,7 +6,10 @@ export function getOkta(): Client {
   if (!_client) {
     _client = new Client({
       orgUrl: process.env.OKTA_ORG_URL!,
-      token: process.env.OKTA_API_TOKEN!,
+      authorizationMode: 'PrivateKey',
+      clientId: process.env.OKTA_CLIENT_ID!,
+      scopes: ['okta.users.manage'],
+      privateKey: process.env.OKTA_PRIVATE_KEY!,
     })
   }
   return _client
