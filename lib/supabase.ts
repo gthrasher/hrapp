@@ -25,6 +25,7 @@ export type Employee = {
   user_type: string | null
   cost_center: string | null
   division: string | null
+  okta_id: string | null
   created_at: string
 }
 
