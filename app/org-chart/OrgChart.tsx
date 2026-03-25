@@ -59,7 +59,7 @@ export function OrgChart({ employees }: { employees: Employee[] }) {
   return (
     <>
       <div className="overflow-x-auto">
-        <div className="inline-flex gap-16 justify-center pt-2 pb-16 px-12">
+        <div className="flex justify-center min-w-full gap-16 pt-2 pb-16 px-12">
           {roots.map(root => (
             <OrgTree key={root.employee.id} node={root} onSelect={setSelected} />
           ))}
