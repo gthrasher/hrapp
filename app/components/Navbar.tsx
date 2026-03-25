@@ -17,6 +17,7 @@ interface NavbarProps {
 
 const navLinks = [
   { href: '/employees', label: 'Employees' },
+  { href: '/org-chart', label: 'Org Chart' },
   { href: '/settings', label: 'Settings' },
 ]
 
