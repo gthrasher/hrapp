@@ -3,6 +3,10 @@ import { Suspense } from 'react'
 import { getSupabase, getFieldOptions, type Employee } from '@/lib/supabase'
 import { EmployeeFilters } from './EmployeeFilters'
 
+type EmployeeWithManager = Employee & {
+  manager: { first_name: string; last_name: string } | null
+}
+
 export const dynamic = 'force-dynamic'
 
 interface Props {
@@ -30,7 +34,7 @@ export default async function EmployeesPage({ searchParams }: Props) {
     )
   }
 
-  const list: Employee[] = employees ?? []
+  const list = (employees ?? []) as EmployeeWithManager[]
   const active = list.filter(e => e.status === 'active').length
   const isFiltered = !!(q || status || department)
 
@@ -107,6 +111,7 @@ export default async function EmployeesPage({ searchParams }: Props) {
                 <th style={{ color: 'var(--text-tertiary)' }} className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell">Email</th>
                 <th style={{ color: 'var(--text-tertiary)' }} className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Department</th>
                 <th style={{ color: 'var(--text-tertiary)' }} className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">Title</th>
+                <th style={{ color: 'var(--text-tertiary)' }} className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider hidden xl:table-cell">Manager</th>
                 <th style={{ color: 'var(--text-tertiary)' }} className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
                 <th className="px-5 py-3"><span className="sr-only">Edit</span></th>
               </tr>
@@ -136,6 +141,11 @@ export default async function EmployeesPage({ searchParams }: Props) {
                   <td style={{ color: 'var(--text-secondary)' }} className="px-5 py-3.5 text-sm hidden sm:table-cell">{emp.email}</td>
                   <td style={{ color: 'var(--text-secondary)' }} className="px-5 py-3.5 text-sm hidden md:table-cell">{emp.department || <span style={{ color: 'var(--text-tertiary)' }}>—</span>}</td>
                   <td style={{ color: 'var(--text-secondary)' }} className="px-5 py-3.5 text-sm hidden lg:table-cell">{emp.job_title || <span style={{ color: 'var(--text-tertiary)' }}>—</span>}</td>
+                  <td style={{ color: 'var(--text-secondary)' }} className="px-5 py-3.5 text-sm hidden xl:table-cell">
+                    {emp.manager
+                      ? `${emp.manager.first_name} ${emp.manager.last_name}`
+                      : <span style={{ color: 'var(--text-tertiary)' }}>—</span>}
+                  </td>
                   <td className="px-5 py-3.5">
                     <span
                       style={emp.status === 'active'
@@ -170,7 +180,7 @@ export default async function EmployeesPage({ searchParams }: Props) {
 function buildQuery(q?: string, status?: string, department?: string) {
   let query = getSupabase()
     .from('employees')
-    .select('*')
+    .select('*, manager:employees!manager_id(first_name, last_name)')
     .order('last_name', { ascending: true })
 
   if (q) {

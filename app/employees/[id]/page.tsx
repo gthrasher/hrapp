@@ -13,9 +13,15 @@ interface Props {
 export default async function EditEmployeePage({ params }: Props) {
   const { id } = await params
 
-  const [{ data: employee, error }, fieldOptions] = await Promise.all([
+  const [{ data: employee, error }, fieldOptions, { data: employees }] = await Promise.all([
     getSupabase().from('employees').select('*').eq('id', id).single(),
     getFieldOptions(),
+    getSupabase()
+      .from('employees')
+      .select('id, first_name, last_name, email')
+      .neq('id', id)
+      .order('first_name')
+      .order('last_name'),
   ])
 
   if (error || !employee) notFound()
@@ -45,7 +51,7 @@ export default async function EditEmployeePage({ params }: Props) {
         )}
       </div>
 
-      <EmployeeForm action={updateWithId} employee={employee} fieldOptions={fieldOptions} />
+      <EmployeeForm action={updateWithId} employee={employee} fieldOptions={fieldOptions} employees={employees ?? []} />
 
       {/* Employment Status */}
       <div

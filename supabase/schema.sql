@@ -10,6 +10,7 @@ create table public.employees (
   job_title   text,
   start_date  date,
   status      text not null default 'active' check (status in ('active', 'inactive')),
+  manager_id  uuid references public.employees(id),
   created_at  timestamptz not null default now()
 );
 

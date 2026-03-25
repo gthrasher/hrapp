@@ -1,12 +1,19 @@
 import Link from 'next/link'
-import { getFieldOptions } from '@/lib/supabase'
+import { getSupabase, getFieldOptions } from '@/lib/supabase'
 import { EmployeeForm } from '../EmployeeForm'
 import { createEmployee } from '../actions'
 
 export const dynamic = 'force-dynamic'
 
 export default async function NewEmployeePage() {
-  const fieldOptions = await getFieldOptions()
+  const [fieldOptions, { data: employees }] = await Promise.all([
+    getFieldOptions(),
+    getSupabase()
+      .from('employees')
+      .select('id, first_name, last_name, email')
+      .order('first_name')
+      .order('last_name'),
+  ])
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-10">
@@ -25,7 +32,7 @@ export default async function NewEmployeePage() {
           Add Employee
         </h1>
       </div>
-      <EmployeeForm action={createEmployee} fieldOptions={fieldOptions} />
+      <EmployeeForm action={createEmployee} fieldOptions={fieldOptions} employees={employees ?? []} />
     </div>
   )
 }

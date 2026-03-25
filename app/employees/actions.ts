@@ -52,6 +52,7 @@ export async function createEmployee(
   const user_type   = (formData.get('user_type')   as string) || null
   const cost_center = (formData.get('cost_center') as string) || null
   const division    = (formData.get('division')    as string) || null
+  const manager_id  = (formData.get('manager_id')  as string) || null
 
   // 1. Create Okta user so we can store the returned ID
   let okta_id: string | null = null
@@ -68,7 +69,7 @@ export async function createEmployee(
   // 2. Insert into Supabase
   const { error } = await getSupabase().from('employees').insert({
     first_name, last_name, email, phone, department, job_title,
-    start_date, status, user_type, cost_center, division, okta_id,
+    start_date, status, user_type, cost_center, division, okta_id, manager_id,
   })
 
   if (error) {
@@ -99,12 +100,13 @@ export async function updateEmployee(
   const user_type   = (formData.get('user_type')   as string) || null
   const cost_center = (formData.get('cost_center') as string) || null
   const division    = (formData.get('division')    as string) || null
+  const manager_id  = (formData.get('manager_id')  as string) || null
 
   // 1. Update Supabase
   const { error } = await getSupabase()
     .from('employees')
     .update({ first_name, last_name, email, phone, department, job_title,
-              start_date, status, user_type, cost_center, division })
+              start_date, status, user_type, cost_center, division, manager_id })
     .eq('id', id)
 
   if (error) return error.message

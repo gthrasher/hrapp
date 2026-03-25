@@ -1,15 +1,18 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import type { Employee } from '@/lib/supabase'
 
 type ActionFn = (prevState: string | null, formData: FormData) => Promise<string | null>
 
+type ManagerOption = Pick<Employee, 'id' | 'first_name' | 'last_name' | 'email'>
+
 interface EmployeeFormProps {
   action: ActionFn
   employee?: Employee
   fieldOptions: Record<string, string[]>
+  employees: ManagerOption[]
 }
 
 const inputClass = 'w-full rounded-lg px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2'
@@ -20,7 +23,7 @@ const inputStyle = {
   color: 'var(--text-primary)',
 }
 
-export function EmployeeForm({ action, employee, fieldOptions }: EmployeeFormProps) {
+export function EmployeeForm({ action, employee, fieldOptions, employees }: EmployeeFormProps) {
   const [error, formAction, pending] = useActionState(action, null)
 
   return (
@@ -155,6 +158,9 @@ export function EmployeeForm({ action, employee, fieldOptions }: EmployeeFormPro
         <h2 style={{ color: 'var(--text-secondary)' }} className="text-xs font-semibold uppercase tracking-wider">
           Organization
         </h2>
+        <Field label="Manager">
+          <ManagerSelect employees={employees} defaultValue={employee?.manager_id} />
+        </Field>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Cost center">
             <select
@@ -223,6 +229,95 @@ function Field({
         {required && <span style={{ color: 'var(--danger)' }} className="ml-0.5">*</span>}
       </label>
       {children}
+    </div>
+  )
+}
+
+function ManagerSelect({
+  employees,
+  defaultValue,
+}: {
+  employees: ManagerOption[]
+  defaultValue?: string | null
+}) {
+  const [open, setOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState<string>(defaultValue ?? '')
+  const ref = useRef<HTMLDivElement>(null)
+
+  const selected = employees.find(e => e.id === selectedId)
+
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative">
+      <input type="hidden" name="manager_id" value={selectedId} />
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className={`${inputClass} flex items-center justify-between gap-2`}
+        style={inputStyle}
+      >
+        <span className="truncate">
+          {selected ? (
+            <>
+              <span className="font-semibold">{selected.first_name} {selected.last_name}</span>
+              {' '}
+              <span style={{ color: 'var(--text-tertiary)' }}>({selected.email})</span>
+            </>
+          ) : (
+            <span style={{ color: 'var(--text-tertiary)' }}>—</span>
+          )}
+        </span>
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          className="shrink-0"
+          style={{ color: 'var(--text-tertiary)' }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 w-full mt-1 rounded-lg overflow-y-auto"
+          style={{
+            backgroundColor: 'var(--surface-raised)',
+            border: '1px solid var(--border)',
+            maxHeight: '220px',
+            top: '100%',
+            left: 0,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => { setSelectedId(''); setOpen(false) }}
+            className="w-full text-left px-3 py-2 text-sm hover:opacity-80 transition-opacity"
+            style={{ color: 'var(--text-tertiary)', borderBottom: '1px solid var(--border)' }}
+          >
+            —
+          </button>
+          {employees.map(emp => (
+            <button
+              key={emp.id}
+              type="button"
+              onClick={() => { setSelectedId(emp.id); setOpen(false) }}
+              className="w-full text-left px-3 py-2 text-sm hover:opacity-80 transition-opacity"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <span className="font-semibold">{emp.first_name} {emp.last_name}</span>
+              {' '}
+              <span style={{ color: 'var(--text-tertiary)' }}>({emp.email})</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
