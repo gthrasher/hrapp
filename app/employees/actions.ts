@@ -14,6 +14,7 @@ function oktaProfile(fields: {
   phone?: string | null
   department?: string | null
   job_title?: string | null
+  manager_email?: string | null  // undefined = omit; null = clear; string = set
 }) {
   return {
     firstName: fields.first_name,
@@ -23,6 +24,7 @@ function oktaProfile(fields: {
     ...(fields.phone      && { mobilePhone: fields.phone }),
     ...(fields.department && { department:  fields.department }),
     ...(fields.job_title  && { title:       fields.job_title }),
+    ...(fields.manager_email !== undefined ? { manager: fields.manager_email } : {}),
   }
 }
 
@@ -33,6 +35,16 @@ async function getOktaId(id: string): Promise<string | null> {
     .eq('id', id)
     .single()
   return data?.okta_id ?? null
+}
+
+async function getManagerEmail(manager_id: string | null): Promise<string | null> {
+  if (!manager_id) return null
+  const { data } = await getSupabase()
+    .from('employees')
+    .select('email')
+    .eq('id', manager_id)
+    .single()
+  return data?.email ?? null
 }
 
 // ─── actions ──────────────────────────────────────────────────────────────────
@@ -54,11 +66,14 @@ export async function createEmployee(
   const division    = (formData.get('division')    as string) || null
   const manager_id  = (formData.get('manager_id')  as string) || null
 
-  // 1. Create Okta user so we can store the returned ID
+  // 1. Resolve manager email for Okta sync
+  const manager_email = await getManagerEmail(manager_id)
+
+  // 2. Create Okta user so we can store the returned ID
   let okta_id: string | null = null
   try {
     const oktaUser = await getOkta().userApi.createUser({
-      body: { profile: oktaProfile({ first_name, last_name, email, phone, department, job_title }) },
+      body: { profile: oktaProfile({ first_name, last_name, email, phone, department, job_title, manager_email }) },
       activate: true,   // sends welcome / activation email
     })
     okta_id = oktaUser.id ?? null
@@ -66,7 +81,7 @@ export async function createEmployee(
     return `Okta error: ${err.message ?? String(err)}`
   }
 
-  // 2. Insert into Supabase
+  // 3. Insert into Supabase
   const { error } = await getSupabase().from('employees').insert({
     first_name, last_name, email, phone, department, job_title,
     start_date, status, user_type, cost_center, division, okta_id, manager_id,
@@ -112,12 +127,15 @@ export async function updateEmployee(
   if (error) return error.message
 
   // 2. Mirror profile changes to Okta (skipped if employee has no okta_id)
-  const okta_id = await getOktaId(id)
+  const [okta_id, manager_email] = await Promise.all([
+    getOktaId(id),
+    getManagerEmail(manager_id),
+  ])
   if (okta_id) {
     try {
       await getOkta().userApi.updateUser({
         userId: okta_id,
-        user: { profile: oktaProfile({ first_name, last_name, email, phone, department, job_title }) },
+        user: { profile: oktaProfile({ first_name, last_name, email, phone, department, job_title, manager_email }) },
       })
     } catch (err: any) {
       return `Saved locally but Okta sync failed: ${err.message ?? String(err)}`
