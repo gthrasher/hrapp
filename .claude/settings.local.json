@@ -3,7 +3,46 @@
     "allow": [
       "Bash(npm run:*)",
       "Bash(npm install:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(list\\(p.get\\('exports',{}\\).keys\\(\\)\\)[:15]\\)\")",
+      "mcp__google__google-create_doc",
+      "mcp__google__google-batch_update_doc",
+      "mcp__google__google-inspect_doc_structure",
+      "mcp__google__google-find_and_replace_doc",
+      "mcp__google__google-get_doc_content",
+      "WebFetch(domain:docs.servicenow.com)",
+      "WebFetch(domain:developer.servicenow.com)",
+      "WebFetch(domain:www.servicenow.com)",
+      "WebFetch(domain:community.servicenow.com)",
+      "WebFetch(domain:nowlearning.servicenow.com)",
+      "mcp__playwright__playwright-browser_navigate",
+      "mcp__playwright__playwright-browser_snapshot",
+      "WebFetch(domain:support.servicenow.com)",
+      "WebFetch(domain:hi.service-now.com)",
+      "mcp__iddb-tmm__whoami",
+      "mcp__iddb-tmm__health",
+      "mcp__iddb-tmm__apps_build_template",
+      "mcp__iddb-tmm__apps_list",
+      "Bash(tar -czf /tmp/hrapp-deploy.tar.gz -C /Users/grey.thrasher/Documents/Grey/Sandbox/AI/HRApp .next/standalone .next/static public -C /tmp -T /dev/null)",
+      "Bash(tar -czf /tmp/hrapp-deploy.tar.gz '--exclude=*.map' -C /Users/grey.thrasher/Documents/Grey/Sandbox/AI/HRApp .next/standalone .next/static public)",
+      "Read(//tmp/**)",
+      "Bash(rm -rf /tmp/hrapp-bundle)",
+      "Bash(mkdir -p /tmp/hrapp-bundle)",
+      "Bash(cp /tmp/Dockerfile.hrapp /tmp/hrapp-bundle/Dockerfile)",
+      "Bash(cp -r /Users/grey.thrasher/Documents/Grey/Sandbox/AI/HRApp/.next/standalone/. /tmp/hrapp-bundle/)",
+      "Bash(cp -r /Users/grey.thrasher/Documents/Grey/Sandbox/AI/HRApp/.next/static /tmp/hrapp-bundle/.next/static)",
+      "mcp__iddb-tmm__apps_get_upload_url",
+      "Bash(git commit:*)",
+      "Bash(rtk read *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('mcpServers', {}\\), indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(rtk git *)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "iddb-tmm"
+  ]
 }

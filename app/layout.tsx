@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 import { Providers } from './providers'
 import { Navbar } from './components/Navbar'
 import { auth0 } from '@/lib/auth0'
 import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const dmSans = DM_Sans({
+  variable: '--font-dm-sans',
   subsets: ['latin'],
+  weight: ['200', '400', '700'],
 })
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default async function RootLayout({
   const user = session?.user ?? null
 
   return (
-    <html lang="en" className={geistSans.variable} suppressHydrationWarning>
+    <html lang="en" className={dmSans.variable} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
         <Providers>
           <Navbar user={user} />

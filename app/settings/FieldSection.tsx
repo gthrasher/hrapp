@@ -33,27 +33,29 @@ export function FieldSection({ fieldName, label, options }: FieldSectionProps) {
       {options.length === 0 ? (
         <p style={{ color: 'var(--text-tertiary)' }} className="text-sm">No values yet.</p>
       ) : (
-        <ul className="space-y-1">
-          {options.map(opt => (
-            <li
-              key={opt.id}
-              className="flex items-center justify-between gap-3 py-1.5"
-              style={{ borderBottom: '1px solid var(--border)' }}
-            >
-              <span style={{ color: 'var(--text-primary)' }} className="text-sm">{opt.value}</span>
-              <form action={deleteFieldOption.bind(null, opt.id)}>
-                <button
-                  type="submit"
-                  style={{ color: 'var(--danger)' }}
-                  className="text-xs px-2 py-0.5 rounded hover:opacity-70 transition-opacity"
-                  aria-label={`Remove ${opt.value}`}
-                >
-                  ×
-                </button>
-              </form>
-            </li>
-          ))}
-        </ul>
+        <div style={{ maxHeight: '11.25rem', overflowY: 'auto' }}>
+          <ul className="space-y-1">
+            {options.map(opt => (
+              <li
+                key={opt.id}
+                className="flex items-center justify-between gap-3 py-1.5"
+                style={{ borderBottom: '1px solid var(--border)' }}
+              >
+                <span style={{ color: 'var(--text-primary)' }} className="text-sm">{opt.value}</span>
+                <form action={deleteFieldOption.bind(null, opt.id)}>
+                  <button
+                    type="submit"
+                    style={{ color: 'var(--danger)' }}
+                    className="text-xs px-2 py-0.5 rounded hover:opacity-70 transition-opacity"
+                    aria-label={`Remove ${opt.value}`}
+                  >
+                    ×
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       <form action={formAction} className="flex gap-2 pt-1">
