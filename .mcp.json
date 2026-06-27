@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "iddb-tmm": {
+      "type": "http",
+      "url": "https://tmm.platform.atko.ai/mcp"
+    },
+    "hrapp": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}

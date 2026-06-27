@@ -38,7 +38,9 @@
       "Bash(rtk read *)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('mcpServers', {}\\), indent=2\\)\\)\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
-      "Bash(rtk git *)"
+      "Bash(rtk git *)",
+      "Bash(tty)",
+      "Bash(GPG_TTY=__CMDSUB_OUTPUT__ git -c commit.gpgsign=false commit -m ' *)"
     ]
   },
   "enableAllProjectMcpServers": true,
