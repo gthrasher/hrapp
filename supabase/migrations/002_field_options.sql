@@ -15,6 +15,7 @@ create table if not exists public.field_options (
 );
 
 alter table public.field_options enable row level security;
+drop policy if exists "allow all" on public.field_options;
 create policy "allow all" on public.field_options for all using (true) with check (true);
 
 -- Seed data
