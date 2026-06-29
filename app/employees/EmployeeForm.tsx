@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import type { Employee } from '@/lib/supabase'
+import type { Employee } from '@/lib/db'
 
 type ActionFn = (prevState: string | null, formData: FormData) => Promise<string | null>
 

@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { getSupabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/db'
 
 export async function addFieldOption(
   fieldName: string,

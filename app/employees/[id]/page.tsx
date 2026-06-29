@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getSupabase, getFieldOptions } from '@/lib/supabase'
+import { getSupabase, getFieldOptions } from '@/lib/db'
 import { EmployeeForm } from '../EmployeeForm'
 import { updateEmployee, deleteEmployee, terminateEmployee, reactivateEmployee } from '../actions'
 

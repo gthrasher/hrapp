@@ -1,4 +1,4 @@
-import { getSupabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/db'
 import { OrgChart } from './OrgChart'
 
 export const dynamic = 'force-dynamic'

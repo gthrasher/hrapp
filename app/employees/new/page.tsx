@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getSupabase, getFieldOptions } from '@/lib/supabase'
+import { getSupabase, getFieldOptions } from '@/lib/db'
 import { EmployeeForm } from '../EmployeeForm'
 import { createEmployee } from '../actions'
 

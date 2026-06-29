@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import type { Employee } from '@/lib/supabase'
+import type { Employee } from '@/lib/db'
 
 type OrgNode = {
   employee: Employee

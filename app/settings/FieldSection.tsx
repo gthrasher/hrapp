@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
-import type { FieldOption } from '@/lib/supabase'
+import type { FieldOption } from '@/lib/db'
 import { addFieldOption, deleteFieldOption } from './actions'
 
 interface FieldSectionProps {

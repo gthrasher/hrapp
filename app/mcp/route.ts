@@ -29,7 +29,7 @@
 
 import { jwtVerify, createRemoteJWKSet } from 'jose'
 import { auth0 } from '@/lib/auth0'
-import { getSupabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/db'
 import { getOkta } from '@/lib/okta'
 
 export const dynamic = 'force-dynamic'

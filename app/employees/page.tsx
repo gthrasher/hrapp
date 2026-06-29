@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { getSupabase, getFieldOptions, type Employee } from '@/lib/supabase'
+import { getSupabase, getFieldOptions, type Employee } from '@/lib/db'
 import { EmployeeFilters } from './EmployeeFilters'
 
 type EmployeeRow = Employee & { managerName: string | null }

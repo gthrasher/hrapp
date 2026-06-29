@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { getSupabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/db'
 import { getOkta } from '@/lib/okta'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────

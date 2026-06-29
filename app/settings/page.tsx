@@ -1,5 +1,5 @@
-import { getSupabase } from '@/lib/supabase'
-import type { FieldOption } from '@/lib/supabase'
+import { getSupabase } from '@/lib/db'
+import type { FieldOption } from '@/lib/db'
 import { FieldSection } from './FieldSection'
 
 export const dynamic = 'force-dynamic'
