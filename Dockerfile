@@ -12,8 +12,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # ── Runtime stage ─────────────────────────────────────────────────────────────
-ARG WOLFI_BASE=cgr.dev/chainguard/wolfi-base@sha256:b78bb982194828b6c9c214230bf34d51944e2102ea8468f01ac21e5f99328efd
-FROM ${WOLFI_BASE}
+FROM cgr.dev/chainguard/wolfi-base@sha256:b78bb982194828b6c9c214230bf34d51944e2102ea8468f01ac21e5f99328efd
 
 RUN apk add --no-cache nodejs
 
