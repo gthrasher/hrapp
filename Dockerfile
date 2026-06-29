@@ -7,10 +7,8 @@ RUN npm ci
 
 COPY . .
 
-# NEXT_PUBLIC_* vars are embedded in the client bundle at build time.
-# These are safe to bake in — they're intentionally exposed to the browser.
-ENV NEXT_PUBLIC_SUPABASE_URL=https://hngddjorbdtstiqidxta.supabase.co
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhuZ2Rkam9yYmR0c3RpcWlkeHRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5Mjk1MTEsImV4cCI6MjA4OTUwNTUxMX0._by97682QeYN_vezb4gCCwkY-yaBx7CQHX69nGdU5mo
+# DB credentials are injected at runtime via NEXT_PUBLIC_SUPABASE_* env vars
+# set in the deployment environment — not baked in here.
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build

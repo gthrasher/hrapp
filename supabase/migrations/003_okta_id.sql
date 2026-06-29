@@ -1,2 +1,2 @@
 alter table public.employees
-  add column okta_id text unique;
+  add column if not exists okta_id text unique;

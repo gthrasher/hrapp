@@ -1,6 +1,6 @@
 -- Run this in your Supabase project's SQL Editor to create the employees table.
 
-create table public.employees (
+create table if not exists public.employees (
   id          uuid primary key default gen_random_uuid(),
   first_name  text not null,
   last_name   text not null,
@@ -18,5 +18,6 @@ create table public.employees (
 -- Tighten these policies once you add authentication.
 alter table public.employees enable row level security;
 
+drop policy if exists "allow all" on public.employees;
 create policy "allow all" on public.employees
   for all using (true) with check (true);

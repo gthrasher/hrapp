@@ -1,11 +1,11 @@
 -- New columns on employees
 alter table public.employees
-  add column user_type   text,
-  add column cost_center text,
-  add column division    text;
+  add column if not exists user_type   text,
+  add column if not exists cost_center text,
+  add column if not exists division    text;
 
 -- New table for dropdown options
-create table public.field_options (
+create table if not exists public.field_options (
   id          uuid primary key default gen_random_uuid(),
   field_name  text not null,
   value       text not null,
