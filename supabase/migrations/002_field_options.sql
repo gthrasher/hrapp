@@ -24,4 +24,5 @@ insert into public.field_options (field_name, value, sort_order) values
   ('department','Finance',4),('department','Support',5),('department','Facilities',6),
   ('user_type','Full-time',1),('user_type','Part-time',2),('user_type','Contractor',3),('user_type','Intern',4),
   ('cost_center','CC-100',1),('cost_center','CC-200',2),('cost_center','CC-300',3),
-  ('division','North America',1),('division','Europe',2),('division','APAC',3);
+  ('division','North America',1),('division','Europe',2),('division','APAC',3)
+on conflict (field_name, value) do nothing;
