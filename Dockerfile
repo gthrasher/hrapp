@@ -14,7 +14,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # ── Runtime stage ─────────────────────────────────────────────────────────────
-FROM node:20-slim AS runner
+FROM iddb/app-base-node:1 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
