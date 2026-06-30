@@ -17,22 +17,19 @@ export async function GET() {
   const key = process.env.IDDB_ANON_KEY!
   const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-  // Tenant UUID (from whoami)
-  const tenantId = 'eb6cd233-1227-4d28-8647-5a7842699d65'
-  const appOrigin = process.env.APP_BASE_URL ?? 'https://hrapp.tmm.platform.atko.ai'
+  const appOrigin = 'https://hrapp.tmm.platform.atko.ai'
+  const base = `${appOrigin}/tmm/rest/v1`
 
-  const candidates: [string, string][] = [
-    [`https://api.iddb.dev/${tenantId}/rest/v1`, key],
-    [`${appOrigin}/tmm/rest/v1`, key],
-    [`${appOrigin}/tmm/rest/v1`, svcKey],
-    [`https://api.iddb.dev/tmm/pg/v1`, key],
-  ]
+  const [withAnon, withSvc] = await Promise.all([
+    probe(`${base}/employees?select=id&limit=1`, key),
+    probe(`${base}/employees?select=id&limit=1`, svcKey),
+  ])
 
-  const results: Record<string, any> = {}
-  for (const [base, k] of candidates) {
-    results[`${base} (${k === key ? 'anon' : 'svc'})`] =
-      await probe(`${base}/employees?select=id&limit=1`, k)
-  }
-
-  return Response.json(results)
+  return Response.json({
+    url_used: base,
+    anon_key_prefix: key?.slice(0, 20),
+    svc_key_prefix: svcKey?.slice(0, 20),
+    anon_result: withAnon,
+    svc_result: withSvc,
+  })
 }
