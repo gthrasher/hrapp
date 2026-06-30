@@ -14,15 +14,23 @@ async function probe(url: string, key: string) {
 }
 
 export async function GET() {
-  const base = process.env.IDDB_URL!
   const key = process.env.IDDB_ANON_KEY!
   const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-  const [anon, svc, noAuth] = await Promise.all([
-    probe(`${base}/rest/v1/employees?select=id&limit=1`, key),
-    probe(`${base}/rest/v1/employees?select=id&limit=1`, svcKey),
-    probe(`${base}/rest/v1/employees?select=id&limit=1`, ''),
-  ])
+  const candidates = [
+    'https://api.iddb.dev/tmm/rest/v1',
+    'https://api.iddb.dev/tmm',
+    'https://platform.atko.ai/tmm/rest/v1',
+  ]
 
-  return Response.json({ base, anon_result: anon, svc_result: svc, noauth_result: noAuth })
+  const results: Record<string, any> = {}
+  for (const base of candidates) {
+    results[base] = await probe(`${base}/employees?select=id&limit=1`, key)
+  }
+  // also try service key on the most likely one
+  results['api.iddb.dev/tmm/rest/v1 (svc)'] = await probe(
+    'https://api.iddb.dev/tmm/rest/v1/employees?select=id&limit=1', svcKey
+  )
+
+  return Response.json(results)
 }
