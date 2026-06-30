@@ -59,7 +59,16 @@
       "Bash(git -C /Users/grey.thrasher/Documents/Grey/Sandbox/AI/HRApp ls-files --others --ignored --exclude-standard)",
       "mcp__iddb-tmm__apps_set_env",
       "mcp__iddb-tmm__grants_apply_bulk",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "mcp__iddb-tmm__apps_deploy",
+      "mcp__iddb-tmm__apps_set_dockerfile",
+      "mcp__iddb-tmm__apps_logs",
+      "mcp__iddb-tmm__grants_list",
+      "mcp__iddb-tmm__query",
+      "Bash(rtk tsc *)",
+      "mcp__iddb-tmm__authz_list_bindings",
+      "mcp__iddb-tmm__get_security_config",
+      "mcp__iddb-tmm__apps_get_oauth_client"
     ]
   },
   "enableAllProjectMcpServers": true,
