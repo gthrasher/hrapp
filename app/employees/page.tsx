@@ -32,8 +32,8 @@ export default async function EmployeesPage({ searchParams }: Props) {
     )
   }
 
-  const nameMap = new Map((employees ?? []).map(e => [e.id, `${e.first_name} ${e.last_name}`]))
-  const list: EmployeeRow[] = (employees ?? []).map(e => ({
+  const nameMap = new Map((employees ?? []).map((e: Employee) => [e.id, `${e.first_name} ${e.last_name}`]))
+  const list: EmployeeRow[] = (employees ?? []).map((e: Employee) => ({
     ...e,
     managerName: e.manager_id ? (nameMap.get(e.manager_id) ?? null) : null,
   }))
@@ -181,7 +181,7 @@ function buildQuery(q?: string, status?: string, department?: string) {
   let query = getSupabase()
     .from('employees')
     .select('*')
-    .order('last_name', { ascending: true })
+    .order('last_name', { ascending: true }) as any
 
   if (q) {
     const like = `%${q}%`
