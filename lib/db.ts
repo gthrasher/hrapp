@@ -4,8 +4,8 @@ let _client: SupabaseClient | null = null
 
 export function getSupabase(): SupabaseClient {
   if (!_client) {
-    const url = process.env.SUPABASE_URL!
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY!
+    const url = process.env.IDDB_URL!
+    const key = process.env.IDDB_ANON_KEY!
     _client = createClient(url, key)
   }
   return _client
