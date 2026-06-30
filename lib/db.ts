@@ -1,6 +1,7 @@
 // Native-fetch PostgREST client.
 // Intentionally avoids @supabase/supabase-js to prevent the
 // iddb supabase-runtime-origin-patch from rewriting the URL.
+import { cookies } from 'next/headers'
 
 export type Employee = {
   id: string
@@ -31,9 +32,17 @@ export type FieldOption = {
 type PgResult<T> = { data: T | null; error: { message: string; code?: string } | null }
 
 function pgBase() { return `${process.env.IDDB_URL}/rest/v1` }
-function pgHeaders(extra?: Record<string, string>) {
+async function pgHeaders(extra?: Record<string, string>) {
   const k = process.env.SUPABASE_SERVICE_ROLE_KEY!
-  return { apikey: k, Authorization: `Bearer ${k}`, 'Content-Type': 'application/json', Prefer: 'return=representation', ...extra }
+  // Forward the user's iddb session cookie so the api-gateway accepts server-side requests
+  let cookieHeader = ''
+  try { cookieHeader = (await cookies()).toString() } catch {}
+  return {
+    apikey: k, Authorization: `Bearer ${k}`,
+    'Content-Type': 'application/json', Prefer: 'return=representation',
+    ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+    ...extra,
+  }
 }
 
 class Builder<T = any> {
@@ -85,7 +94,7 @@ class Builder<T = any> {
       const extra: Record<string, string> = {}
       if (this._single) extra['Accept'] = 'application/vnd.pgrst.object+json'
       const res = await fetch(url, {
-        method: this._method, headers: pgHeaders(extra), body: this._body, cache: 'no-store',
+        method: this._method, headers: await pgHeaders(extra), body: this._body, cache: 'no-store',
       })
       if (res.status === 204 || res.status === 205) return { data: null, error: null }
       const text = await res.text()
