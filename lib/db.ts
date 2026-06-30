@@ -32,7 +32,7 @@ type PgResult<T> = { data: T | null; error: { message: string; code?: string } |
 
 function pgBase() { return `${process.env.IDDB_URL}/rest/v1` }
 function pgHeaders(extra?: Record<string, string>) {
-  const k = process.env.IDDB_ANON_KEY!
+  const k = process.env.SUPABASE_SERVICE_ROLE_KEY!
   return { apikey: k, Authorization: `Bearer ${k}`, 'Content-Type': 'application/json', Prefer: 'return=representation', ...extra }
 }
 
@@ -80,20 +80,24 @@ class Builder<T = any> {
   }
 
   private async _run(): Promise<PgResult<T>> {
+    const url = this._url()
     try {
       const extra: Record<string, string> = {}
       if (this._single) extra['Accept'] = 'application/vnd.pgrst.object+json'
-      const res = await fetch(this._url(), {
+      const res = await fetch(url, {
         method: this._method, headers: pgHeaders(extra), body: this._body, cache: 'no-store',
       })
       if (res.status === 204 || res.status === 205) return { data: null, error: null }
       const text = await res.text()
       if (!res.ok) {
+        const keyPrefix = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? '').slice(0, 20)
+        console.error(`[db] ${this._method} ${url} → ${res.status} key=${keyPrefix} body=${text.slice(0, 200)}`)
         try { return { data: null, error: JSON.parse(text) } }
         catch { return { data: null, error: { message: text || res.statusText } } }
       }
       return { data: text ? JSON.parse(text) : null, error: null }
     } catch (e: any) {
+      console.error(`[db] fetch error ${url}:`, e?.message)
       return { data: null, error: { message: e?.message ?? String(e) } }
     }
   }
